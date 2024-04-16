@@ -1,5 +1,6 @@
 package converter;
 
+import java.math.BigInteger;
 import java.util.Scanner;
 
 public class Main {
@@ -7,19 +8,26 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        String input;
         while (true) {
-            System.out.print("Do you want to convert /from decimal or /to decimal? (To quit type /exit) ");
-            switch (scanner.nextLine()) {
-                case "/from":
-                    convertFromDecimal();
-                    break;
-                case "/to":
-                    convertToDecimal();
-                    break;
-                case "/exit":
-                    return;
+            System.out.print("Enter two numbers in format: {source base} {target base} (To quit type /exit) ");
+            input = scanner.nextLine();
+            if ("/exit".equals(input)) {
+                break;
             }
-            System.out.println("\n");
+            String[] base = input.split(" ");
+            int fromBase = Integer.parseInt(base[0]);
+            int toBase = Integer.parseInt(base[1]);
+            while (true) {
+                System.out.printf("Enter number in base %d to convert to base %d (To go back type /back) ", fromBase, toBase);
+                input = scanner.nextLine();
+                if ("/back".equals(input)) {
+                    break;
+                }
+                System.out.println("Conversion result: " + NumberUtils.convert(input, fromBase, toBase));
+                System.out.println();
+            }
+            System.out.println();
         }
     }
 
