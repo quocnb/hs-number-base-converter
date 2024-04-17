@@ -2,6 +2,7 @@ package converter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,32 @@ public class NumberUtils {
             int reminder = number.mod(BigInteger.valueOf(toBase)).intValue();
             builder.insert(0, hexLetter.get(reminder));
             number = number.divide(BigInteger.valueOf(toBase));
+        }
+        return builder.isEmpty() ? "0" : builder.toString();
+    }
+
+    static String convertFraction(String source, int fromBase, int toBase) {
+        StringBuilder builder = new StringBuilder();
+        BigDecimal number = BigDecimal.ZERO;
+        BigDecimal fromBaseDecimal = BigDecimal.valueOf(fromBase);
+        BigDecimal toBaseDecimal = BigDecimal.valueOf(toBase);
+
+        for (String s: new StringBuilder(source).reverse().toString().split("")) {
+            double value;
+            try {
+                value = hexLetter.indexOf(s.toUpperCase());
+            } catch (Exception e) {
+                value = 0;
+            }
+            number = number.add(BigDecimal.valueOf(value)).divide(fromBaseDecimal, 5, RoundingMode.FLOOR);
+        }
+        int count = 0;
+        while (count < 5) {
+            number = number.multiply(toBaseDecimal);
+            BigDecimal integerPart = number.setScale(0, RoundingMode.DOWN);
+            builder.append(hexLetter.get(integerPart.intValue()));
+            number = number.remainder(BigDecimal.ONE);
+            count += 1;
         }
         return builder.toString();
     }

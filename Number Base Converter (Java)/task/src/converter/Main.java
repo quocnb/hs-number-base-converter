@@ -24,7 +24,15 @@ public class Main {
                 if ("/back".equals(input)) {
                     break;
                 }
-                System.out.println("Conversion result: " + NumberUtils.convert(input, fromBase, toBase));
+                String[] numberParts = input.split("\\.");
+                StringBuilder builder = new StringBuilder();
+                builder.append("Conversion result: ");
+                builder.append(NumberUtils.convert(numberParts[0], fromBase, toBase));
+                if (numberParts.length == 2) {
+                    builder.append(".");
+                    builder.append(NumberUtils.convertFraction(numberParts[1], fromBase, toBase));
+                }
+                System.out.println(builder);
                 System.out.println();
             }
             System.out.println();
